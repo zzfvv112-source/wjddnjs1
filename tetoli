@@ -1,0 +1,91 @@
+body {
+    touch-action: manipulation; /* 모바일에서 스크롤을 방지하고 터치 입력에 집중 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #2c3e50;
+    color: white;
+    font-family: sans-serif;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: row; /* 기본적으로 가로 배치 */
+    margin-top: 20px;
+}
+
+#tetris-canvas {
+    border: 5px solid #bdc3c7;
+    background-color: #1a2430;
+    display: block;
+}
+
+#sidebar {
+    padding: 10px;
+    margin-left: 20px;
+    width: 150px;
+    background-color: #34495e;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#next-block-canvas {
+    border: 1px solid #7f8c8d;
+    margin-bottom: 15px;
+    background-color: #2c3e50;
+    display: block;
+}
+
+/* --- 모바일 제어 버튼 스타일 --- */
+#controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 500px;
+    padding-bottom: 20px;
+}
+
+.horizontal-controls {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin: 10px 0;
+}
+
+#controls button {
+    padding: 15px;
+    margin: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px #1a2430;
+    transition: background-color 0.1s;
+    user-select: none; /* 텍스트 선택 방지 */
+    touch-action: manipulation;
+}
+
+#controls button:active {
+    box-shadow: 0 1px #1a2430;
+    transform: translateY(3px);
+}
+
+#rotate { background-color: #f39c12; }
+#move-left, #move-right { background-color: #2980b9; width: 45%; }
+#soft-drop { background-color: #16a085; }
+#hard-drop { background-color: #e74c3c; }
+
+/* 모바일 뷰포트 최적화 */
+@media (max-width: 650px) {
+    #game-container {
+        flex-direction: column; /* 캔버스와 사이드바를 세로로 쌓기 */
+    }
+    #sidebar {
+        margin: 15px 0 0 0;
+    }
+}
