@@ -1,91 +1,146 @@
-body {
-    touch-action: manipulation; /* 모바일에서 스크롤을 방지하고 터치 입력에 집중 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background-color: #2c3e50;
-    color: white;
-    font-family: sans-serif;
-}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모바일 테트리스</title>
+    <style>
+        /* ---------------------- CSS (style.css 역할) ---------------------- */
+        body {
+            touch-action: manipulation;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #2c3e50;
+            color: white;
+            font-family: sans-serif;
+        }
 
-#game-container {
-    display: flex;
-    flex-direction: row; /* 기본적으로 가로 배치 */
-    margin-top: 20px;
-}
+        #game-container {
+            display: flex;
+            flex-direction: row;
+            margin-top: 20px;
+        }
 
-#tetris-canvas {
-    border: 5px solid #bdc3c7;
-    background-color: #1a2430;
-    display: block;
-}
+        #tetris-canvas {
+            border: 5px solid #bdc3c7;
+            background-color: #1a2430;
+            display: block;
+        }
 
-#sidebar {
-    padding: 10px;
-    margin-left: 20px;
-    width: 150px;
-    background-color: #34495e;
-    border-radius: 5px;
-    text-align: center;
-}
+        #sidebar {
+            padding: 10px;
+            margin-left: 20px;
+            width: 150px;
+            background-color: #34495e;
+            border-radius: 5px;
+            text-align: center;
+        }
 
-#next-block-canvas {
-    border: 1px solid #7f8c8d;
-    margin-bottom: 15px;
-    background-color: #2c3e50;
-    display: block;
-}
+        #next-block-canvas {
+            border: 1px solid #7f8c8d;
+            margin-bottom: 15px;
+            background-color: #2c3e50;
+            display: block;
+        }
 
-/* --- 모바일 제어 버튼 스타일 --- */
-#controls {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 90%;
-    max-width: 500px;
-    padding-bottom: 20px;
-}
+        /* --- 모바일 제어 버튼 스타일 --- */
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 500px;
+            padding-bottom: 20px;
+            margin-top: 10px;
+        }
 
-.horizontal-controls {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    margin: 10px 0;
-}
+        .horizontal-controls {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin: 10px 0;
+        }
 
-#controls button {
-    padding: 15px;
-    margin: 5px;
-    font-size: 1.1em;
-    font-weight: bold;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0 4px #1a2430;
-    transition: background-color 0.1s;
-    user-select: none; /* 텍스트 선택 방지 */
-    touch-action: manipulation;
-}
+        #controls button {
+            padding: 15px;
+            margin: 5px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px #1a2430;
+            transition: background-color 0.1s;
+            user-select: none;
+            touch-action: manipulation;
+        }
 
-#controls button:active {
-    box-shadow: 0 1px #1a2430;
-    transform: translateY(3px);
-}
+        #controls button:active {
+            box-shadow: 0 1px #1a2430;
+            transform: translateY(3px);
+        }
 
-#rotate { background-color: #f39c12; }
-#move-left, #move-right { background-color: #2980b9; width: 45%; }
-#soft-drop { background-color: #16a085; }
-#hard-drop { background-color: #e74c3c; }
+        #rotate { background-color: #f39c12; }
+        #move-left, #move-right { background-color: #2980b9; width: 45%; }
+        #soft-drop { background-color: #16a085; }
+        #hard-drop { background-color: #e74c3c; }
 
-/* 모바일 뷰포트 최적화 */
-@media (max-width: 650px) {
-    #game-container {
-        flex-direction: column; /* 캔버스와 사이드바를 세로로 쌓기 */
-    }
-    #sidebar {
-        margin: 15px 0 0 0;
-    }
-}
+        /* 모바일 뷰포트 최적화 */
+        @media (max-width: 650px) {
+            #game-container {
+                flex-direction: column;
+            }
+            #sidebar {
+                margin: 15px 0 0 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="tetris-canvas" width="300" height="600"></canvas>
+        
+        <div id="sidebar">
+            <h3>다음 블록</h3>
+            <canvas id="next-block-canvas" width="120" height="120"></canvas>
+            <p>점수: <span id="score">0</span></p>
+            <p id="game-status">게임 시작</p>
+        </div>
+    </div>
+
+    <div id="controls">
+        <button id="rotate">🔄 회전</button>
+        <div class="horizontal-controls">
+            <button id="move-left">◀️ 왼쪽</button>
+            <button id="move-right">▶️ 오른쪽</button>
+        </div>
+        <button id="soft-drop">⬇️ 천천히 내리기</button>
+        <button id="hard-drop">⏬ 하드 드롭</button>
+    </div>
+
+    <script>
+        /* ---------------------- JavaScript (script.js 역할) ---------------------- */
+
+        // HTML 요소 가져오기
+        const canvas = document.getElementById('tetris-canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const statusElement = document.getElementById('game-status');
+        
+        // 게임 설정
+        const COLS = 10;
+        const ROWS = 20;
+        const BLOCK_SIZE = 30; // 30px x 30px 블록 크기
+
+        // 게임 보드 초기화 (0은 빈 공간)
+        let board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+
+        // 테트로미노 모양 및 색상 정의
+        const SHAPES = [
+            { matrix: [[1, 1, 1, 1]], color: '#00ffff' }, // I
+            { matrix: [[0, 1, 0], [1, 1, 1], [0, 0, 0]], color: '#9933ff' }, // T
+            { matrix: [[1, 0, 0], [1, 1, 1], [0, 0, 0]], color: '#ff7f00' },
